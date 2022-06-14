@@ -2,6 +2,7 @@
 Protótipo de um gerador de terreno procedural na Unreal Engine
 
 ***
+# Criação de terreno e props 
 
 # Procedural Mesh
 
@@ -267,4 +268,77 @@ Possui a movimentação básica da classe do projeto de terceira pessoa da Unrea
 Para o jogador manipular o terreno, é necessário ter um input de incremento e outro de decremento.
 
 ![image](https://user-images.githubusercontent.com/78811958/165598309-ae3dc90e-5c58-494b-9536-a9fadc148235.png)
+
+***
+
+O texto acima explica a primeira entraga desse trabalho, apenas com a criação do terreno e a movimentação básica do personagem. Na segunda parte, foquei em adicionar elementos de gameplay baseado no terreno e o spanw de props.
+
+A ideia do protótipo é um jogo de sobrevivência, onde você precisa comer regularmente, se não o personagem morre. O jogador também pode coletar recurços, madeira, pedra e metal (além da comida) para fabricar outras ferramentas. O objetivo do jogo é sobreviver o maior tempo possível em partidas rápidas de alguns minutos.
+
+
+
+# World Generator Survivor
+
+## Component_SpawnProp
+Esse componente nada mais é que o refatoramento do Component_PutInGround. Agora, o componente não só colocar o ator no terreno, como também gera sua posição aleatoriamente, então, ao invéz de destruir o objeto caso não possa colocar no chão, é gerado uma nova posição até que o objeto ache uma posição apropriada.
+
+Geração da posição aleatória.
+![image](https://user-images.githubusercontent.com/78811958/173621505-f2585d2b-bcf8-41ca-bb9f-dd17c91943be.png)
+
+Definição de variáveis de referencias (passos 0,1 e 2) e loop para procular uma posição viável.
+![image](https://user-images.githubusercontent.com/78811958/173621916-a7617e0d-d487-487c-9202-8fca8f3f292e.png)
+
+O objeto e posicionado em uma posição aleatória.
+![image](https://user-images.githubusercontent.com/78811958/173622142-547684dd-4dda-47eb-b42b-c87a3547ff87.png)
+
+É feito um line tracer em uma posição logo abaixo do objeto até a posição mais baixa do terreno.
+![image](https://user-images.githubusercontent.com/78811958/173622496-88126fca-6559-4bbb-a16e-6bb47f44eaac.png)
+
+Se a posição do impacto for menor que a posição da água ou o ator colidido não for o BP_Terrain, a função retorna destroy como true, se não retorna com false. Se destroy for igual a true, a função é chamada novamente.
+![image](https://user-images.githubusercontent.com/78811958/173622834-d6f96cca-00c0-4e1b-b6a0-ba95167e2d1e.png)
+
+## RandomRotate
+Componente que adiciona uma rotação aleatória no eixo Z.
+
+![image](https://user-images.githubusercontent.com/78811958/173623199-6f1063c1-7e1f-47ec-9bb0-8238ddada838.png)
+
+## Component_CollectableObject
+
+### Begin Play
+A variável life é definida de acordo com a scale.
+![image](https://user-images.githubusercontent.com/78811958/173623592-32f3c027-e1ec-409f-93f0-076837825fee.png)
+
+### TakeDamage
+Função que é chamda para dar dano no prop.
+
+Caso o dano seja igual a -1, o player possui uma ferramenta que não coleta o prop, se for 0, ele só pode coletar props com uma scale menor.
+![image](https://user-images.githubusercontent.com/78811958/173624558-0c3d5534-5cb5-4ff9-a7fc-5d41af8bb8ca.png)
+
+Se for qualquer outro dano, a life do objeto é diminuida de acordo com o dano, se chegar a zero, o objeto é destruido.
+
+![image](https://user-images.githubusercontent.com/78811958/173625353-5430b89d-3c73-40f0-9822-481c057b2145.png)
+
+## Ferramentas e inventário
+
+Para o inventário utilizei uma struct com cada recurço
+![image](https://user-images.githubusercontent.com/78811958/173625615-21566862-84e0-4ee1-a395-79dc0c674aa1.png)
+
+Para as ferramentas utilizei outra estrutura, a toolData, que contém o poder de coleta, o custo de fabricação, a mesh e o material da ferramenta.
+
+![image](https://user-images.githubusercontent.com/78811958/173625770-e51e0848-4674-4a85-9448-1be1ae3c45a2.png)
+
+Dentro do Blueprint do player há um array dessa estrutura, e pela função SetTool, é possivel alternar entre essas ferramentas.
+
+
+### SetTool
+Função do player que alera o render e o poder de coleta do player.
+A função recebe um index para acessar os dados de toolData, retira os recursos necessários para a fabricação do item (a verificação da quantidade de recursos é feita no menu de craft).
+
+![image](https://user-images.githubusercontent.com/78811958/173626467-d735372a-3b0e-4bcd-997b-babc25b4bc0c.png)
+
+Logo em seguida, a variável de poder de coleta do player é atualizada (toolDamage), a malha e o material é alterado de acordo com o array toolData.
+![image](https://user-images.githubusercontent.com/78811958/173627043-d1f786f4-782c-4f52-88d9-50b5cc0aab94.png)
+
+
+
 
