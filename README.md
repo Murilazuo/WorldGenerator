@@ -285,7 +285,7 @@ Esse componente nada mais é que o refatoramento do Component_PutInGround. Agora
 Geração da posição aleatória.
 ![image](https://user-images.githubusercontent.com/78811958/173621505-f2585d2b-bcf8-41ca-bb9f-dd17c91943be.png)
 
-Definição de variáveis de referencias (passos 0,1 e 2) e loop para procular uma posição viável.
+Definição de variáveis de referencias (passos 0,1 e 2) e loop para procurar uma posição viável.
 ![image](https://user-images.githubusercontent.com/78811958/173621916-a7617e0d-d487-487c-9202-8fca8f3f292e.png)
 
 O objeto e posicionado em uma posição aleatória.
